@@ -61,9 +61,9 @@ class _LoginPageState extends State<LoginPage> {
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
-              padding: const EdgeInsets.only(top: 2),
+              padding: const EdgeInsets.only(top: 0),
               child: SizedBox(
-                height: 600,
+                height: 440,
                 child: Image.asset(
                   'assets/images/worker.png',
                   fit: BoxFit.contain,
@@ -144,7 +144,7 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(height: 30),
                     ElevatedButton(
                       onPressed: () async {
-                        final correo = emailController.text.trim();
+                        final correo = emailController.text.trim().toLowerCase();
                         final password = passwordController.text.trim();
                         if (correo.isEmpty || password.isEmpty) {
                           ScaffoldMessenger.of(context).showSnackBar(

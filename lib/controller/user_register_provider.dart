@@ -7,11 +7,13 @@ class UserRegisterProvider {
     final dbService = DatabaseService();
     try {
       await dbService.connect();
+      final data = registerData.toMap();
+      data['correo'] = data['correo'].trim().toLowerCase();
       await dbService.registerCollection.insertOne({
         '_id': registerData.id,
-        ...registerData.toMap(),
+        ...data,
       });
-      print('Usuario registrado correctamente: ${registerData.toMap()}');
+      print('Usuario registrado correctamente: ${data}');
     } catch (e) {
       print('Error al registrar usuario: $e');
     } finally {
@@ -23,7 +25,7 @@ class UserRegisterProvider {
     final dbService = DatabaseService();
     try {
       await dbService.connect();
-      final user = await dbService.registerCollection.findOne({'correo': correo});
+      final user = await dbService.registerCollection.findOne({'correo': correo.trim().toLowerCase()});
       return user;
     } catch (e) {
       print('Error al buscar usuario por correo: $e');
