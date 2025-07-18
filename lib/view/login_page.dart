@@ -7,14 +7,52 @@ import 'register_page.dart';
 import '../controller/user_register_provider.dart';
 import 'forgot_password_page.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import '../controller/translator_service.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  String titulo = 'Inicio de Sesión';
+  String correoLabel = 'Correo';
+  String correoHint = 'Ingresa tu correo electrónico';
+  String passLabel = 'Contraseña';
+  String passHint = 'Ingresa tu contraseña';
+  String ingresar = 'Ingresar';
+  String olvidaste = '¿Olvidaste tu contraseña?';
+  String nuevo = '¿Nuevo en SuMapp? Crea tu perfil';
+
+  Future<void> traducirAlIngles() async {
+    final translator = TranslatorService();
+    setState(() { titulo = 'Translating...'; });
+    final t1 = await translator.translate('Inicio de Sesión', to: 'en');
+    final t2 = await translator.translate('Correo', to: 'en');
+    final t3 = await translator.translate('Ingresa tu correo electrónico', to: 'en');
+    final t4 = await translator.translate('Contraseña', to: 'en');
+    final t5 = await translator.translate('Ingresa tu contraseña', to: 'en');
+    final t6 = await translator.translate('Ingresar', to: 'en');
+    final t7 = await translator.translate('¿Olvidaste tu contraseña?', to: 'en');
+    final t8 = await translator.translate('¿Nuevo en SuMapp? Crea tu perfil', to: 'en');
+    setState(() {
+      titulo = t1;
+      correoLabel = t2;
+      correoHint = t3;
+      passLabel = t4;
+      passHint = t5;
+      ingresar = t6;
+      olvidaste = t7;
+      nuevo = t8;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final TextEditingController emailController = TextEditingController();
-    final TextEditingController passwordController = TextEditingController();
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 0, 15, 47),
       body: Stack(
@@ -52,7 +90,7 @@ class LoginPage extends StatelessWidget {
                     SizedBox(
                       width: double.infinity,
                       child: Text(
-                        'Inicio de Sesión',
+                        titulo,
                         textAlign: TextAlign.start,
                         style: const TextStyle(
                           fontFamily: 'Brandan',
@@ -70,9 +108,9 @@ class LoginPage extends StatelessWidget {
                           controller: emailController,
                           style: const TextStyle(fontFamily: 'Poppins'),
                           decoration: InputDecoration(
-                            labelText: 'Correo',
+                            labelText: correoLabel,
                             labelStyle: const TextStyle(fontSize: 20, fontFamily: 'Poppins'),
-                            hintText: 'Ingresa tu correo electrónico',
+                            hintText: correoHint,
                             hintStyle: const TextStyle(fontFamily: 'Poppins'),
                             prefixIcon: const Icon(Icons.email_outlined),
                             filled: true,
@@ -89,9 +127,9 @@ class LoginPage extends StatelessWidget {
                           obscureText: true,
                           style: const TextStyle(fontFamily: 'Poppins'),
                           decoration: InputDecoration(
-                            labelText: 'Contraseña',
+                            labelText: passLabel,
                             labelStyle: const TextStyle(fontSize: 20, fontFamily: 'Poppins'),
-                            hintText: 'Ingresa tu contraseña',
+                            hintText: passHint,
                             hintStyle: const TextStyle(fontFamily: 'Poppins'),
                             prefixIcon: const Icon(Icons.lock_outline),
                             filled: true,
@@ -168,8 +206,8 @@ class LoginPage extends StatelessWidget {
                         backgroundColor: const Color.fromARGB(255, 50, 50, 50),
                         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                       ),
-                      child: const Text(
-                        'Ingresar',
+                      child: Text(
+                        ingresar,
                         style: TextStyle(
                           fontFamily: 'Poppins',
                           fontSize: 20,
@@ -205,8 +243,8 @@ class LoginPage extends StatelessWidget {
                           MaterialPageRoute(builder: (context) => const ForgotPasswordPage()),
                         );
                       },
-                      child: const Text(
-                        '¿Olvidaste tu contraseña?',
+                      child: Text(
+                        olvidaste,
                         style: TextStyle(color: Color.fromARGB(255, 255, 255, 255), fontSize: 18, fontFamily: 'Poppins'),
                       ),
                     ),
@@ -218,9 +256,20 @@ class LoginPage extends StatelessWidget {
                           MaterialPageRoute(builder: (context) => const RegisterPage()),
                         );
                       },
-                      child: const Text(
-                        '¿Nuevo en SuMapp? Crea tu perfil',
+                      child: Text(
+                        nuevo,
                         style: TextStyle(color: Color.fromARGB(255, 255, 255, 255), fontSize: 20, fontFamily: 'Poppins'),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton.icon(
+                      onPressed: traducirAlIngles,
+                      icon: const Icon(Icons.language),
+                      label: const Text('Traducir a Inglés'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFF1976D2),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                       ),
                     ),
                   ],

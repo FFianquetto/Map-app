@@ -1,29 +1,25 @@
-import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class TranslatorService {
-  // Reemplaza estos valores con tu clave y región de Azure
-  final String apiKey = 'TU_API_KEY_AQUI';
-  final String region = 'TU_REGION_AQUI';
+  final String googleApiKey = 'AIzaSyDWssNaPVFLiQUxjQ_sA6OkLaJBCRrjkfE';
 
-  Future<String> translateToEnglish(String text) async {
-    final url = Uri.parse('https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&to=en');
+  /// Traducción usando la API oficial de Google Cloud Translate (requiere API Key)
+  Future<String> translate(String text, {String to = 'en'}) async {
+    final url = Uri.parse('https://translation.googleapis.com/language/translate/v2?key=$googleApiKey');
     final response = await http.post(
       url,
-      headers: {
-        'Ocp-Apim-Subscription-Key': apiKey,
-        'Ocp-Apim-Subscription-Region': region,
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode([
-        {'Text': text}
-      ]),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'q': text,
+        'target': to,
+      }),
     );
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      return data[0]['translations'][0]['text'] ?? '';
+      return data['data']['translations'][0]['translatedText'] ?? '';
     } else {
-      throw Exception('Error al traducir: ${response.body}');
+      throw Exception('Error al traducir con Google API: \n${response.body}');
     }
   }
 } 
