@@ -9,11 +9,11 @@ class DatabaseService {
 
   static const String dbName = 'SuMappDb';
   static const String loginCollectionName = 'Login';
-  static const String sessionCollectionName = 'Login';
+  static const String registerCollectionName = 'Register';
 
   late Db db;
   late DbCollection collection;
-  late DbCollection sessionCollection;
+  late DbCollection registerCollection;
   late DbCollection coursesCollection;
   late DbCollection enrollmentsCollection;
   final logger = Logger();
@@ -23,45 +23,11 @@ class DatabaseService {
       db = Db(mongoUri);
       await db.open();
       collection = db.collection(loginCollectionName); // Usar Login
-      sessionCollection = db.collection(sessionCollectionName);
+      registerCollection = db.collection(registerCollectionName);
       logger.i(
           'Conexión establecida a MongoDB Atlas en la base de datos $dbName');
     } catch (e) {
       logger.e('Error al conectar con MongoDB Atlas: $e');
-    }
-  }
-
-  // Método para registrar sesión en la colección de sesiones
-  Future<void> logSession({
-    required ObjectId userId,
-    required String ip,
-    required String userAgent,
-  }) async {
-    try {
-      await connect();
-
-      final token = _generateToken();
-      final createdAt = DateTime.now();
-      final expiresAt = createdAt.add(const Duration(days: 7));
-
-      final sessionData = {
-        'userId': userId,
-        'token': token,
-        'device': {
-          'ip': ip,
-          'userAgent': userAgent,
-        },
-        'createdAt': createdAt,
-        'expiresAt': expiresAt,
-      };
-
-      await sessionCollection.insertOne(sessionData);
-
-      logger.i('Sesión registrada exitosamente: $sessionData');
-      closeConnection();
-    } catch (e) {
-      logger.e('Error al registrar sesión: $e');
-      closeConnection();
     }
   }
 

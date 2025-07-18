@@ -6,7 +6,7 @@ class UserEmailProvider {
     try {
       await dbService.connect();
       await dbService.collection.insertOne(userData);
-      print('Usuario insertado correctamente: ' + userData.toString());
+      print('Usuario insertado correctamente: $userData');
     } catch (e) {
       print('Error al insertar usuario: $e');
     } finally {

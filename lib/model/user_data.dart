@@ -31,3 +31,38 @@ class UserData {
     };
   }
 }
+
+class UserRegister {
+  String id;
+  final String nombre;
+  final String apellido;
+  final String telefono;
+  final String correo;
+  String password;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  UserRegister({
+    this.id = '',
+    required this.nombre,
+    required this.apellido,
+    required this.telefono,
+    required this.correo,
+    required this.password,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  })  : createdAt = createdAt ?? DateTime.now(),
+        updatedAt = updatedAt ?? DateTime.now();
+
+  Map<String, dynamic> toMap() {
+    return {
+      'nombre': nombre,
+      'apellido': apellido,
+      'telefono': telefono,
+      'correo': correo,
+      'password': password,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+    };
+  }
+}

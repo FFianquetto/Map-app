@@ -1,9 +1,36 @@
 import 'package:flutter/material.dart';
 import 'login_page.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../controller/user_register_provider.dart';
+import 'package:mongo_dart/mongo_dart.dart' as mongo;
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  final mongo.ObjectId userId;
+  const HomeScreen({super.key, required this.userId});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  String? nombreUsuario;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserName();
+  }
+
+  Future<void> _loadUserName() async {
+    final provider = UserRegisterProvider();
+    final user = await provider.findById(widget.userId);
+    print('Usuario encontrado: $user');
+    setState(() {
+      nombreUsuario = user != null ? user['nombre'] : null;
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,18 +66,47 @@ class HomeScreen extends StatelessWidget {
               );
             },
           ),
-          title: const Padding(
-            padding: EdgeInsets.only(top: 6),
-            child: Text(
-              'Bienvenido',
-              style: TextStyle(
-                fontFamily: 'Brandan',
-                color: Colors.black87,
-                fontWeight: FontWeight.bold,
-                fontSize: 32,
-                letterSpacing: 1.2,
-              ),
-            ),
+          title: Padding(
+            padding: const EdgeInsets.only(top: 6),
+            child: isLoading
+                ? const Text(
+                    'Bienvenido',
+                    style: TextStyle(
+                      fontFamily: 'Brandan',
+                      color: Colors.black87,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
+                      letterSpacing: 1.1,
+                    ),
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Bienvenido',
+                        style: TextStyle(
+                          fontFamily: 'Brandan',
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 32,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+                      if (nombreUsuario != null) ...[
+                        const SizedBox(width: 12),
+                        Text(
+                          nombreUsuario!,
+                          style: const TextStyle(
+                            fontFamily: 'Brandan',
+                            color: Colors.black87,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 32,
+                            letterSpacing: 1.2,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
           ),
           centerTitle: true,
           toolbarHeight: 80,

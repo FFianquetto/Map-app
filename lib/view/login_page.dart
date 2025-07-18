@@ -2,9 +2,10 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import '../model/user_data.dart';
-import '../controller/database_service.dart';
 import '../controller/user_email_provider.dart';
-import 'package:mongo_dart/mongo_dart.dart';
+import 'package:mongo_dart/mongo_dart.dart' as mongo;
+import 'register_page.dart';
+import '../controller/user_register_provider.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -112,34 +113,54 @@ class LoginPage extends StatelessWidget {
                           );
                           return;
                         }
-                        if (password.length < 6) {
+                        // Validar que el correo exista en Register
+                        final registerProvider = UserRegisterProvider();
+                        final userInRegister = await registerProvider.findByCorreo(correo);
+                        if (userInRegister == null) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('La contraseña debe tener al menos 6 caracteres.')),
+                            SnackBar(
+                              content: Text(
+                                'El correo no está registrado como usuario de la aplicación.',
+                                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              ),
+                              backgroundColor: Colors.red[700],
+                              duration: Duration(seconds: 4),
+                              behavior: SnackBarBehavior.floating,
+                              margin: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                            ),
                           );
                           return;
                         }
-                        final user = UserData(
-                          id: ObjectId().toHexString(),
-                          correo: correo,
-                          password: password,
-                          status: {
-                            'conectado': false,
-                            'personalizado': false,
-                            'lastLogin': null,
-                          },
-                        );
-                        final userProvider = UserEmailProvider();
-                        await userProvider.insertUser({
-                          '_id': ObjectId.fromHexString(user.id),
-                          'correo': user.correo,
-                          'password': user.password,
-                          'status': user.status,
-                          'createdAt': user.createdAt,
-                          'updatedAt': user.updatedAt,
+                        // Validar que la contraseña coincida
+                        if (userInRegister['password'] != password) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                'La contraseña es incorrecta.',
+                                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              ),
+                              backgroundColor: Colors.red[700],
+                              duration: Duration(seconds: 4),
+                              behavior: SnackBarBehavior.floating,
+                              margin: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                            ),
+                          );
+                          return;
+                        }
+                        // userInRegister['_id'] es el id real del usuario (ObjectId)
+                        await registerProvider.updateStatusLogin(userInRegister['_id'] as mongo.ObjectId, true);
+                        final loginProvider = UserEmailProvider();
+                        await loginProvider.insertUser({
+                          'correo': correo,
+                          'loginAt': DateTime.now(),
                         });
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => const HomeScreen()),
+                          MaterialPageRoute(builder: (context) => HomeScreen(userId: userInRegister['_id'] as mongo.ObjectId)),
                         );
                       },
                       style: ElevatedButton.styleFrom(
@@ -160,15 +181,20 @@ class LoginPage extends StatelessWidget {
                       onPressed: null, // Sin funcionalidad
                       child: const Text(
                         '¿Olvidaste tu contraseña?',
-                        style: TextStyle(color: Color.fromARGB(255, 255, 255, 255), fontSize: 16, fontFamily: 'Poppins'),
+                        style: TextStyle(color: Color.fromARGB(255, 255, 255, 255), fontSize: 18, fontFamily: 'Poppins'),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 15),
                     TextButton(
-                      onPressed: null, // Sin funcionalidad
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const RegisterPage()),
+                        );
+                      },
                       child: const Text(
                         '¿Nuevo en SuMapp? Crea tu perfil',
-                        style: TextStyle(color: Color.fromARGB(255, 255, 255, 255), fontFamily: 'Poppins'),
+                        style: TextStyle(color: Color.fromARGB(255, 255, 255, 255), fontSize: 20, fontFamily: 'Poppins'),
                       ),
                     ),
                   ],
