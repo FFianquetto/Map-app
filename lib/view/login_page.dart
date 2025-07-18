@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
-import '../model/user_data.dart';
 import '../controller/user_email_provider.dart';
 import 'package:mongo_dart/mongo_dart.dart' as mongo;
 import 'register_page.dart';

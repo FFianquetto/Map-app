@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
           title: Padding(
-            padding: const EdgeInsets.only(top: 6),
+            padding: const EdgeInsets.only(top: 6, right: 50),
             child: isLoading
                 ? const Text(
                     'Bienvenido',
