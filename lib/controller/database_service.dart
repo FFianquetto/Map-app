@@ -1,6 +1,6 @@
 import 'package:mongo_dart/mongo_dart.dart';
 import 'package:logger/logger.dart';
-import 'dart:math'; // Para generar el token
+// import 'dart:math'; // Para generar el token
 
 // Recupera
 class DatabaseService {
@@ -25,19 +25,11 @@ class DatabaseService {
       collection = db.collection(loginCollectionName); // Usar Login
       registerCollection = db.collection(registerCollectionName);
       logger.i(
-          'Conexión establecida a MongoDB Atlas en la base de datos $dbName');
+        'Conexión establecida a MongoDB Atlas en la base de datos $dbName',
+      );
     } catch (e) {
       logger.e('Error al conectar con MongoDB Atlas: $e');
     }
-  }
-
-  // Método para generar un token aleatorio
-  String _generateToken() {
-    const chars =
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    final rand = Random();
-    return List.generate(32, (index) => chars[rand.nextInt(chars.length)])
-        .join();
   }
 
   // Cerrar la conexión
@@ -49,4 +41,13 @@ class DatabaseService {
       logger.e('Error al cerrar la conexión: $e');
     }
   }
+
+  // Método para generar un token aleatorio
+  // String _generateToken() {
+  //   const chars =
+  //       'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  //   final rand = Random();
+  //   return List.generate(32, (index) => chars[rand.nextInt(chars.length)])
+  //       .join();
+  // }
 }

@@ -16,7 +16,8 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController telefonoController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   bool isLoading = false;
 
   @override
@@ -26,12 +27,14 @@ class _RegisterPageState extends State<RegisterPage> {
     const Color appBarColor = Color(0xFFC7CBDC);
     const Color naranja = Color(0xFFFF9800);
     const Color textoPrincipal = Colors.black87;
-    const Color textoSecundario = Colors.black54;
+    //const Color textoSecundario = Colors.black54;
 
     final double anchoPantalla = MediaQuery.of(context).size.width;
     final bool esPantallaGrande = anchoPantalla > 900;
     final bool esTablet = anchoPantalla > 600 && anchoPantalla <= 900;
-    final double maxContentWidth = esPantallaGrande ? 900 : (esTablet ? 700 : 400);
+    final double maxContentWidth = esPantallaGrande
+        ? 900
+        : (esTablet ? 700 : 400);
 
     return Scaffold(
       backgroundColor: fondoClaro,
@@ -70,7 +73,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 children: [
                   // Imagen decorativa
                   Container(
-                    constraints: const BoxConstraints(maxWidth: 300, maxHeight: 180),
+                    constraints: const BoxConstraints(
+                      maxWidth: 300,
+                      maxHeight: 180,
+                    ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(16),
                       child: Image.asset(
@@ -85,7 +91,10 @@ class _RegisterPageState extends State<RegisterPage> {
                     style: const TextStyle(fontFamily: 'Poppins'),
                     decoration: InputDecoration(
                       labelText: 'Nombre',
-                      labelStyle: const TextStyle(fontSize: 20, fontFamily: 'Poppins'),
+                      labelStyle: const TextStyle(
+                        fontSize: 20,
+                        fontFamily: 'Poppins',
+                      ),
                       hintText: 'Ingresa tu nombre',
                       hintStyle: const TextStyle(fontFamily: 'Poppins'),
                       prefixIcon: const Icon(Icons.person_outline),
@@ -102,7 +111,10 @@ class _RegisterPageState extends State<RegisterPage> {
                     style: const TextStyle(fontFamily: 'Poppins'),
                     decoration: InputDecoration(
                       labelText: 'Apellido',
-                      labelStyle: const TextStyle(fontSize: 20, fontFamily: 'Poppins'),
+                      labelStyle: const TextStyle(
+                        fontSize: 20,
+                        fontFamily: 'Poppins',
+                      ),
                       hintText: 'Ingresa tu apellido',
                       hintStyle: const TextStyle(fontFamily: 'Poppins'),
                       prefixIcon: const Icon(Icons.person_outline),
@@ -120,7 +132,10 @@ class _RegisterPageState extends State<RegisterPage> {
                     style: const TextStyle(fontFamily: 'Poppins'),
                     decoration: InputDecoration(
                       labelText: 'Teléfono',
-                      labelStyle: const TextStyle(fontSize: 20, fontFamily: 'Poppins'),
+                      labelStyle: const TextStyle(
+                        fontSize: 20,
+                        fontFamily: 'Poppins',
+                      ),
                       hintText: 'Ingresa tu número de teléfono',
                       hintStyle: const TextStyle(fontFamily: 'Poppins'),
                       prefixIcon: const Icon(Icons.phone_outlined),
@@ -137,7 +152,10 @@ class _RegisterPageState extends State<RegisterPage> {
                     style: const TextStyle(fontFamily: 'Poppins'),
                     decoration: InputDecoration(
                       labelText: 'Correo',
-                      labelStyle: const TextStyle(fontSize: 20, fontFamily: 'Poppins'),
+                      labelStyle: const TextStyle(
+                        fontSize: 20,
+                        fontFamily: 'Poppins',
+                      ),
                       hintText: 'Ingresa tu correo electrónico',
                       hintStyle: const TextStyle(fontFamily: 'Poppins'),
                       prefixIcon: const Icon(Icons.email_outlined),
@@ -155,7 +173,10 @@ class _RegisterPageState extends State<RegisterPage> {
                     style: const TextStyle(fontFamily: 'Poppins'),
                     decoration: InputDecoration(
                       labelText: 'Contraseña',
-                      labelStyle: const TextStyle(fontSize: 20, fontFamily: 'Poppins'),
+                      labelStyle: const TextStyle(
+                        fontSize: 20,
+                        fontFamily: 'Poppins',
+                      ),
                       hintText: 'Crea una contraseña',
                       hintStyle: const TextStyle(fontFamily: 'Poppins'),
                       prefixIcon: const Icon(Icons.lock_outline),
@@ -173,7 +194,10 @@ class _RegisterPageState extends State<RegisterPage> {
                     style: const TextStyle(fontFamily: 'Poppins'),
                     decoration: InputDecoration(
                       labelText: 'Confirmar contraseña',
-                      labelStyle: const TextStyle(fontSize: 20, fontFamily: 'Poppins'),
+                      labelStyle: const TextStyle(
+                        fontSize: 20,
+                        fontFamily: 'Poppins',
+                      ),
                       hintText: 'Repite tu contraseña',
                       hintStyle: const TextStyle(fontFamily: 'Poppins'),
                       prefixIcon: const Icon(Icons.lock_outline),
@@ -189,49 +213,80 @@ class _RegisterPageState extends State<RegisterPage> {
                     width: double.infinity,
                     height: 54,
                     child: ElevatedButton(
-                      onPressed: isLoading ? null : () async {
-                        final nombre = nombreController.text.trim();
-                        final apellido = apellidoController.text.trim();
-                        final telefono = telefonoController.text.trim();
-                        final correo = emailController.text.trim();
-                        final password = passwordController.text.trim();
-                        final confirmPassword = confirmPasswordController.text.trim();
-                        if (nombre.isEmpty || apellido.isEmpty || telefono.isEmpty || correo.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Por favor completa todos los campos.')),
-                          );
-                          return;
-                        }
-                        if (password.length < 6) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('La contraseña debe tener al menos 6 caracteres.')),
-                          );
-                          return;
-                        }
-                        if (password != confirmPassword) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Las contraseñas no coinciden.')),
-                          );
-                          return;
-                        }
-                        setState(() { isLoading = true; });
-                        final registerData = RegisterData(
-                          id: mongo.ObjectId(),
-                          nombre: nombre,
-                          apellido: apellido,
-                          telefono: telefono,
-                          correo: correo,
-                          password: password,
-                        );
-                        final userProvider = UserRegisterProvider();
-                        await userProvider.insertRegisterData(registerData);
-                        setState(() { isLoading = false; });
-                        if (!mounted) return;
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('¡Registro exitoso! Ahora puedes iniciar sesión.')),
-                        );
-                      },
+                      onPressed: isLoading
+                          ? null
+                          : () async {
+                              final nombre = nombreController.text.trim();
+                              final apellido = apellidoController.text.trim();
+                              final telefono = telefonoController.text.trim();
+                              final correo = emailController.text.trim();
+                              final password = passwordController.text.trim();
+                              final confirmPassword = confirmPasswordController
+                                  .text
+                                  .trim();
+                              if (nombre.isEmpty ||
+                                  apellido.isEmpty ||
+                                  telefono.isEmpty ||
+                                  correo.isEmpty ||
+                                  password.isEmpty ||
+                                  confirmPassword.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Por favor completa todos los campos.',
+                                    ),
+                                  ),
+                                );
+                                return;
+                              }
+                              if (password.length < 6) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'La contraseña debe tener al menos 6 caracteres.',
+                                    ),
+                                  ),
+                                );
+                                return;
+                              }
+                              if (password != confirmPassword) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Las contraseñas no coinciden.',
+                                    ),
+                                  ),
+                                );
+                                return;
+                              }
+                              setState(() {
+                                isLoading = true;
+                              });
+                              final registerData = RegisterData(
+                                id: mongo.ObjectId(),
+                                nombre: nombre,
+                                apellido: apellido,
+                                telefono: telefono,
+                                correo: correo,
+                                password: password,
+                              );
+                              final userProvider = UserRegisterProvider();
+                              await userProvider.insertRegisterData(
+                                registerData,
+                              );
+                              setState(() {
+                                isLoading = false;
+                              });
+                              if (!mounted) return;
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    '¡Registro exitoso! Ahora puedes iniciar sesión.',
+                                  ),
+                                ),
+                              );
+                            },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: naranja,
                         foregroundColor: textoPrincipal,
@@ -242,16 +297,16 @@ class _RegisterPageState extends State<RegisterPage> {
                         elevation: 0,
                       ),
                       child: isLoading
-                        ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text(
-                            'Registrarse',
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              color: Colors.black,
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : const Text(
+                              'Registrarse',
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                color: Colors.black,
+                              ),
                             ),
-                          ),
                     ),
                   ),
                 ],
@@ -262,4 +317,4 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
-} 
+}

@@ -44,12 +44,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // Responsive: ancho de pantalla
     final double anchoPantalla = MediaQuery.of(context).size.width;
-    final double altoPantalla = MediaQuery.of(context).size.height;
+    //final double altoPantalla = MediaQuery.of(context).size.height;
     final bool esPantallaGrande = anchoPantalla > 900;
     final bool esTablet = anchoPantalla > 600 && anchoPantalla <= 900;
 
     // Limitar el ancho máximo del contenido
-    final double maxContentWidth = esPantallaGrande ? 900 : (esTablet ? 700 : 400);
+    final double maxContentWidth = esPantallaGrande
+        ? 900
+        : (esTablet ? 700 : 400);
 
     return Scaffold(
       backgroundColor: fondoClaro,
@@ -170,10 +172,8 @@ class _HomeScreenState extends State<HomeScreen> {
           showModalBottomSheet(
             context: context,
             isScrollControlled: true,
-            builder: (context) => const SizedBox(
-              height: 400,
-              child: _MapaMonterrey(),
-            ),
+            builder: (context) =>
+                const SizedBox(height: 400, child: _MapaMonterrey()),
           );
         },
         icon: const Icon(Icons.map),
@@ -189,7 +189,12 @@ class _TextoBienvenida extends StatelessWidget {
   final Color textoPrincipal;
   final Color textoSecundario;
   final bool grande;
-  const _TextoBienvenida({required this.naranja, required this.textoPrincipal, required this.textoSecundario, this.grande = false});
+  const _TextoBienvenida({
+    required this.naranja,
+    required this.textoPrincipal,
+    required this.textoSecundario,
+    this.grande = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -206,7 +211,9 @@ class _TextoBienvenida extends StatelessWidget {
               color: Colors.black87,
             ),
             children: [
-              const TextSpan(text: 'El sistema flexible para optimizar\ntus procesos de '),
+              const TextSpan(
+                text: 'El sistema flexible para optimizar\ntus procesos de ',
+              ),
               TextSpan(
                 text: 'supervisión y\nmantenimiento',
                 style: TextStyle(color: naranja),
@@ -219,14 +226,14 @@ class _TextoBienvenida extends StatelessWidget {
           'Transforma tus operaciones con nuestro software y facilita el cumplimiento normativo, prolonga la vida útil de tus activos y garantiza espacios seguros y confortables.',
           style: TextStyle(
             fontFamily: 'Poppins',
-            fontSize: grande ? 30: 24, 
+            fontSize: grande ? 30 : 24,
             color: Colors.black54,
           ),
         ),
         const SizedBox(height: 28),
         SizedBox(
           width: grande ? 550 : 440,
-          height: grande ? 50: 66,
+          height: grande ? 50 : 66,
           child: ElevatedButton(
             onPressed: () async {
               final Uri url = Uri.parse('http://www.sumapp.cloud/');
@@ -272,10 +279,7 @@ class _ImagenDecorativa extends StatelessWidget {
           aspectRatio: 16 / 9,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(16),
-            child: Image.asset(
-              'assets/images/image.gif',
-              fit: BoxFit.cover,
-            ),
+            child: Image.asset('assets/images/image.gif', fit: BoxFit.cover),
           ),
         ),
       ),
@@ -291,10 +295,7 @@ class _MapaMonterrey extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GoogleMap(
-      initialCameraPosition: const CameraPosition(
-        target: mtyCenter,
-        zoom: 13,
-      ),
+      initialCameraPosition: const CameraPosition(target: mtyCenter, zoom: 13),
       markers: {
         const Marker(
           markerId: MarkerId('mty_center'),
