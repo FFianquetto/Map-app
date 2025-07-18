@@ -5,6 +5,7 @@ import '../controller/user_email_provider.dart';
 import 'package:mongo_dart/mongo_dart.dart' as mongo;
 import 'register_page.dart';
 import '../controller/user_register_provider.dart';
+import 'forgot_password_page.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -177,7 +178,12 @@ class LoginPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     TextButton(
-                      onPressed: null, // Sin funcionalidad
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const ForgotPasswordPage()),
+                        );
+                      },
                       child: const Text(
                         '¿Olvidaste tu contraseña?',
                         style: TextStyle(color: Color.fromARGB(255, 255, 255, 255), fontSize: 18, fontFamily: 'Poppins'),
