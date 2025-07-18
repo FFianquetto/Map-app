@@ -27,6 +27,8 @@ class _LoginPageState extends State<LoginPage> {
   String ingresar = 'Ingresar';
   String olvidaste = '¿Olvidaste tu contraseña?';
   String nuevo = '¿Nuevo en SuMapp? Crea tu perfil';
+  bool enIngles = false;
+  String verMapa = 'Ver Mapa MTY';
 
   Future<void> traducirAlIngles() async {
     final translator = TranslatorService();
@@ -39,6 +41,7 @@ class _LoginPageState extends State<LoginPage> {
     final t6 = await translator.translate('Ingresar', to: 'en');
     final t7 = await translator.translate('¿Olvidaste tu contraseña?', to: 'en');
     final t8 = await translator.translate('¿Nuevo en SuMapp? Crea tu perfil', to: 'en');
+    final t9 = await translator.translate('Ver Mapa MTY', to: 'en');
     setState(() {
       titulo = t1;
       correoLabel = t2;
@@ -48,6 +51,23 @@ class _LoginPageState extends State<LoginPage> {
       ingresar = t6;
       olvidaste = t7;
       nuevo = t8;
+      verMapa = t9;
+      enIngles = true;
+    });
+  }
+
+  void traducirAlEspanol() {
+    setState(() {
+      titulo = 'Inicio de Sesión';
+      correoLabel = 'Correo';
+      correoHint = 'Ingresa tu correo electrónico';
+      passLabel = 'Contraseña';
+      passHint = 'Ingresa tu contraseña';
+      ingresar = 'Ingresar';
+      olvidaste = '¿Olvidaste tu contraseña?';
+      nuevo = '¿Nuevo en SuMapp? Crea tu perfil';
+      verMapa = 'Ver Mapa MTY';
+      enIngles = false;
     });
   }
 
@@ -228,7 +248,7 @@ class _LoginPageState extends State<LoginPage> {
                         );
                       },
                       icon: const Icon(Icons.map),
-                      label: const Text('Ver Mapa MTY'),
+                      label: Text(verMapa),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFFFF9800),
                         foregroundColor: Colors.black,
@@ -263,9 +283,9 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 16),
                     ElevatedButton.icon(
-                      onPressed: traducirAlIngles,
+                      onPressed: enIngles ? traducirAlEspanol : traducirAlIngles,
                       icon: const Icon(Icons.language),
-                      label: const Text('Traducir a Inglés'),
+                      label: Text(enIngles ? 'Traducir a Español' : 'Switch to English'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF1976D2),
                         foregroundColor: Colors.white,
