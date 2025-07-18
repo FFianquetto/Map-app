@@ -1,13 +1,18 @@
 
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
-
+import '../model/user_data.dart';
+import '../controller/database_service.dart';
+import '../controller/user_email_provider.dart';
+import 'package:mongo_dart/mongo_dart.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController emailController = TextEditingController();
+    final TextEditingController passwordController = TextEditingController();
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 0, 15, 47),
       body: Stack(
@@ -60,6 +65,7 @@ class LoginPage extends StatelessWidget {
                       children: [
                         // Campo de correo con icono
                         TextField(
+                          controller: emailController,
                           style: const TextStyle(fontFamily: 'Poppins'),
                           decoration: InputDecoration(
                             labelText: 'Correo',
@@ -77,6 +83,7 @@ class LoginPage extends StatelessWidget {
                         const SizedBox(height: 16),
                         // Campo de contraseña con icono
                         TextField(
+                          controller: passwordController,
                           obscureText: true,
                           style: const TextStyle(fontFamily: 'Poppins'),
                           decoration: InputDecoration(
@@ -96,7 +103,40 @@ class LoginPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 30),
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        final correo = emailController.text.trim();
+                        final password = passwordController.text.trim();
+                        if (correo.isEmpty || password.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Por favor ingresa correo y contraseña.')),
+                          );
+                          return;
+                        }
+                        if (password.length < 6) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('La contraseña debe tener al menos 6 caracteres.')),
+                          );
+                          return;
+                        }
+                        final user = UserData(
+                          id: ObjectId().toHexString(),
+                          correo: correo,
+                          password: password,
+                          status: {
+                            'conectado': false,
+                            'personalizado': false,
+                            'lastLogin': null,
+                          },
+                        );
+                        final userProvider = UserEmailProvider();
+                        await userProvider.insertUser({
+                          '_id': ObjectId.fromHexString(user.id),
+                          'correo': user.correo,
+                          'password': user.password,
+                          'status': user.status,
+                          'createdAt': user.createdAt,
+                          'updatedAt': user.updatedAt,
+                        });
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(builder: (context) => const HomeScreen()),
@@ -104,7 +144,6 @@ class LoginPage extends StatelessWidget {
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color.fromARGB(255, 50, 50, 50),
-                        minimumSize: Size.zero,
                         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                       ),
                       child: const Text(
