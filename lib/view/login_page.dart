@@ -6,6 +6,7 @@ import 'package:mongo_dart/mongo_dart.dart' as mongo;
 import 'register_page.dart';
 import '../controller/user_register_provider.dart';
 import 'forgot_password_page.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -177,6 +178,26 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (context) => const SizedBox(
+                            height: 400,
+                            child: _MapaMonterrey(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.map),
+                      label: const Text('Ver Mapa MTY'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFFFF9800),
+                        foregroundColor: Colors.black,
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
                     TextButton(
                       onPressed: () {
                         Navigator.push(
@@ -209,6 +230,31 @@ class LoginPage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _MapaMonterrey extends StatelessWidget {
+  const _MapaMonterrey();
+
+  static const LatLng mtyCenter = LatLng(25.6866, -100.3161);
+
+  @override
+  Widget build(BuildContext context) {
+    return GoogleMap(
+      initialCameraPosition: const CameraPosition(
+        target: mtyCenter,
+        zoom: 13,
+      ),
+      markers: {
+        const Marker(
+          markerId: MarkerId('mty_center'),
+          position: mtyCenter,
+          infoWindow: InfoWindow(title: 'Monterrey Centro'),
+        ),
+      },
+      zoomControlsEnabled: true,
+      myLocationButtonEnabled: false,
     );
   }
 }

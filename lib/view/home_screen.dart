@@ -3,6 +3,7 @@ import 'login_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../controller/user_register_provider.dart';
 import 'package:mongo_dart/mongo_dart.dart' as mongo;
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
   final mongo.ObjectId userId;
@@ -164,6 +165,21 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            builder: (context) => const SizedBox(
+              height: 400,
+              child: _MapaMonterrey(),
+            ),
+          );
+        },
+        icon: const Icon(Icons.map),
+        label: const Text('Ver Mapa MTY'),
+        backgroundColor: Color(0xFFFF9800),
+      ),
     );
   }
 }
@@ -263,6 +279,31 @@ class _ImagenDecorativa extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _MapaMonterrey extends StatelessWidget {
+  const _MapaMonterrey();
+
+  static const LatLng mtyCenter = LatLng(25.6866, -100.3161);
+
+  @override
+  Widget build(BuildContext context) {
+    return GoogleMap(
+      initialCameraPosition: const CameraPosition(
+        target: mtyCenter,
+        zoom: 13,
+      ),
+      markers: {
+        const Marker(
+          markerId: MarkerId('mty_center'),
+          position: mtyCenter,
+          infoWindow: InfoWindow(title: 'Monterrey Centro'),
+        ),
+      },
+      zoomControlsEnabled: true,
+      myLocationButtonEnabled: false,
     );
   }
 }
